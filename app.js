@@ -21,6 +21,14 @@ const router = require("./routes/router");
 app.use(express.json()); //data will sent in json format
 app.use(cors()); //port error will not show
 app.use(helmet());
+app.use(
+  helmet.contentSecurityPolicy({
+    useDefaults: true,
+    directives: {
+      "img-src": ["'self'", "https: data:"]
+    }
+  })
+)
 app.use(cookieParser());
 app.use(router);
 //HOSTING PROCESS ON HEROKU FOR DEPLOYMENT : START
@@ -29,6 +37,7 @@ app.use(express.static(path.join(__dirname,'/client/build')))
 app.get('*',function(req,res){
     res.sendFile(path.join(__dirname,'/client/build/index.html'));
 })
+
 // if(process.env.NODE_ENV === "production"){
 //     app.use(express.static("client/build"))
 // }
